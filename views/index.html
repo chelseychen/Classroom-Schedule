@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    <title>Chelsey Chen</title>
+
+    <!-- Bootstrap core CSS -->
+    <link href="bootstrap/css/bootstrap.min.css" rel="stylesheet">
+
+    <script type="text/javascript">
+        function validateForm() {
+            // Reset the error view
+            document.getElementById("buildingError").innerHTML = "";
+            document.getElementById("roomError").innerHTML = "";
+
+            var noError = true;
+            var alphabets = /^[A-Za-z]+$/;
+            var digits = /^[0-9]+$/;
+            var building = document.forms["form1"]["building"].value;
+            var room  = document.forms["form1"]["room"].value;
+
+            if (building == '' || !building.match(alphabets)) {
+                document.getElementById("buildingError").innerHTML =
+                "Please enter an valid building name.";
+                noError = false;
+            }
+
+            if (room == '' || !room.match(digits)) {
+                document.getElementById("roomError").innerHTML =
+                "Please enter an valid room number.";
+                noError = false;
+            }
+
+            return noError;
+        }
+    </script>
+</head>
+
+<body>
+    <h1>Classroom Schedule</h1>
+    <form name="form1" method="POST" class="" onsubmit="return validateForm()"">
+        <p>Building: <input type="text" name="building" /></p>
+        <p>Room number: <input type="text" name="room" /></p>
+        <p class="error" id="buildingError"></p>
+        <p class="error" id="roomError"></p>
+        <input id="search" type="submit" value="Search" class="btn" />
+    </form>
+
+    <% if (typeof building!='undefined' && typeof room!='undefined') { %>
+        <p>You're searching for classroom: <%= building %> <%= room %></p>
+    <% } %>
+
+    <% if (typeof courses!='undefined') { %>
+        <ul>
+            <% courses.forEach(function(course) { %>
+                <li><%= course.subject %> <%= course.catalog_number %></li>
+            <% }); %>
+        </ul>
+    <% } %>
+</body>
+</html>

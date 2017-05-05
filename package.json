@@ -1,0 +1,26 @@
+{
+  "name": "classroom-schedule",
+  "version": "1.0.0",
+  "description": "",
+  "main": "app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/chelseychen/Classroom-Schedule.git"
+  },
+  "author": "Chelsey Chen",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/chelseychen/Classroom-Schedule/issues"
+  },
+  "homepage": "https://github.com/chelseychen/Classroom-Schedule#readme",
+  "dependencies": {
+    "body-parser": "^1.17.1",
+    "ejs": "^2.5.6",
+    "express": "^4.15.2",
+    "path": "^0.12.7",
+    "uwaterloo-api": "^1.0.2"
+  }
+}
