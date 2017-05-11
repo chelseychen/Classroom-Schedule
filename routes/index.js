@@ -91,7 +91,7 @@ processTime = function(time) {
     var year = today.getFullYear().toString();
     var month = months[today.getMonth()];
     var date = today.getDate().toString(); // 1, ..., 31
-    var time_string = date.concat(" ", month, " ", year, " ", time);
+    var time_string = date.concat(" ", month, " ", year, " ", time, ":00 UTC-0400");
     var result = Date.parse(time_string);
     return result;
 }
