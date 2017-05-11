@@ -10,8 +10,9 @@
 
     <title>Chelsey Chen</title>
 
-    <!-- Bootstrap core CSS -->
-    <link href="bootstrap/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="bootstrap/dist/css/bootstrap.min.css">
+    <link rel="stylesheet" href="bootstrap/dist/css/bootstrap-theme.min.css">
+    <link rel="stylesheet" href="bootstrap-calendar/css/calendar.css">
 
     <script type="text/javascript">
         function validateForm() {
@@ -20,12 +21,11 @@
             document.getElementById("roomError").innerHTML = "";
 
             var noError = true;
-            var alphabets = /^[A-Za-z]+$/;
             var digits = /^[0-9]+$/;
             var building = document.forms["form1"]["building"].value;
             var room  = document.forms["form1"]["room"].value;
 
-            if (building == '' || !building.match(alphabets)) {
+            if (building == '') {
                 document.getElementById("buildingError").innerHTML =
                 "Please enter an valid building name.";
                 noError = false;
@@ -43,25 +43,49 @@
 </head>
 
 <body>
-    <h1>Classroom Schedule</h1>
-    <form name="form1" method="POST" class="" onsubmit="return validateForm()"">
-        <p>Building: <input type="text" name="building" /></p>
-        <p>Room number: <input type="text" name="room" /></p>
-        <p class="error" id="buildingError"></p>
-        <p class="error" id="roomError"></p>
-        <input id="search" type="submit" value="Search" class="btn" />
-    </form>
+<div class="container">
+    <div class="jumbotron">
+        <h1>Classroom Schedule</h1>
+        <form name="form1" method="POST" class="" onsubmit="return validateForm()"">
+            <p>Building: <input type="text" name="building" />   (e.g MC, DC, RCH, DWE, HH...)</p>
+            <p>Room number: <input type="text" name="room" /></p>
+            <p class="error" id="buildingError"></p>
+            <p class="error" id="roomError"></p>
+            <input id="search" type="submit" value="Search" class="btn" />
+        </form>
+    </div>
 
-    <% if (typeof building!='undefined' && typeof room!='undefined') { %>
-        <p>You're searching for classroom: <%= building %> <%= room %></p>
+    <% if (typeof building != 'undefined' && typeof room != 'undefined' && typeof date != 'undefined') { %>
+        <h2>Classroom Schedule of <%= building %> <%= room %> on <%= date %></h2>
     <% } %>
 
+    <!-- Debug: check if courses all match
     <% if (typeof courses!='undefined') { %>
         <ul>
             <% courses.forEach(function(course) { %>
-                <li><%= course.subject %> <%= course.catalog_number %></li>
+                <li><%= course.title %>: start [<%= course.start %>] end [<%= course.end %>]</li>
             <% }); %>
         </ul>
     <% } %>
+    -->
+
+    <div id="calendar"></div>
+    <script type="text/javascript" src="jquery/dist/jquery.js"></script>
+    <script type="text/javascript" src="underscore/underscore-min.js"></script>
+    <script type="text/javascript" src="bootstrap-calendar/js/calendar.js"></script>
+
+    <% if (typeof courses != 'undefined') { %>
+        <script type="text/javascript">
+            var calendar = $("#calendar").calendar({
+                view: 'day',
+                time_start: '08:00',
+                time_end: '22:00',
+                tmpl_cache: false,
+                tmpl_path: "bootstrap-calendar/tmpls/",
+                events_source: JSON.parse('<%- JSON.stringify(courses) %>')
+            });
+        </script>
+    <% } %>
+</div>
 </body>
 </html>
