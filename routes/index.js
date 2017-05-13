@@ -14,16 +14,18 @@ router.get('/', function(req, res, next) {
 router.post('/', function(req, res, next) {
     var b = req.body.building,
         r = req.body.room;
+        d = req.body.day;
 
     uwclient.get('/buildings/{building}/{room}/courses', {
             building: b, room: r
         }, function(err, response) {
             var courses_raw = response.data;
-            var courses = processData(courses_raw);
+            var courses = processData(courses_raw, d);
             var building = b.toUpperCase();
             var today = new Date();
             var date = today.toDateString();
             res.render('index', {
+                day: d,
                 date: date,
                 building: building,
                 room: r,
@@ -33,11 +35,10 @@ router.post('/', function(req, res, next) {
 });
 
 // Process all the courses and make them use the format of event_source
-processData = function(courses_raw) {
+processData = function(courses_raw, day) {
     var courses = [];
     courses_raw.forEach(function(course_raw) {
-        if (checkWeekday(course_raw.weekdays)) {
-
+        if (checkWeekday(course_raw.weekdays, day)) {
             var title = course_raw.subject.concat(" ", course_raw.catalog_number,
                 " - ", course_raw.title, ": ", course_raw.section);
             var url = getUrl(course_raw.term, course_raw.subject, course_raw.catalog_number);
@@ -56,11 +57,14 @@ processData = function(courses_raw) {
     return courses;
 };
 
-// Check if we have this class today
-checkWeekday = function(weekdays) {
+// Check if we have this class today or on a specific weekday
+checkWeekday = function(weekdays, day) {
     var tmp = ["S", "M", "T", "W", "Th", "F", "Sa"];
-    var today = new Date();
-    var day = tmp[today.getDay()];
+    if (day == "today") {
+        var today = new Date();
+        day = tmp[today.getDay()];
+    }
+
     if (weekdays.includes(day)) {
         if (day == "T") {
             if (weekdays.indexOf("T")+1 == weekdays.length) return true;

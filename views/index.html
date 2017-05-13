@@ -47,16 +47,36 @@
     <div class="jumbotron">
         <h1>Classroom Schedule</h1>
         <form name="form1" method="POST" class="" onsubmit="return validateForm()"">
-            <p>Building: <input type="text" name="building" />   (e.g MC, DC, RCH, DWE, HH...)</p>
-            <p>Room number: <input type="text" name="room" /></p>
+            <p>*Building: <input type="text" name="building" />   (e.g MC, DC, RCH, DWE, HH...)</p>
+            <p>*Room number: <input type="text" name="room" /></p>
+            <p>Day:
+            <select name="day">
+                <option value="today" selected></option>
+                <option value="M">Monday</option>
+                <option value="T">Tuesday</option>
+                <option value="W">Wednesday</option>
+                <option value="Th">Thursday</option>
+                <option value="F">Friday</option>
+            </select> (Default will show today's schedule.)</p>
             <p class="error" id="buildingError"></p>
             <p class="error" id="roomError"></p>
             <input id="search" type="submit" value="Search" class="btn" />
         </form>
     </div>
 
-    <% if (typeof building != 'undefined' && typeof room != 'undefined' && typeof date != 'undefined') { %>
-        <h2>Classroom Schedule of <%= building %> <%= room %> on <%= date %></h2>
+    <% if (typeof building != 'undefined' && typeof room != 'undefined' && typeof date != 'undefined' && typeof day != 'undefined') { %>
+        <% if (day == "today") { %>
+            <h2>Classroom Schedule of <%= building %> <%= room %> on <%= date %></h2>
+        <% } else { %>
+            <h2>Classroom Schedule of <%= building %> <%= room %> on
+                <% if (day == "M") { %> Monday
+                <% } else if (day == "T") { %> Tuesday
+                <% } else if (day == "W") { %> Wednesday
+                <% } else if (day == "Th") { %> Thursday
+                <% } else { %> Friday
+                <% } %>
+            </h2>
+        <% } %>
     <% } %>
 
     <!-- Debug: check if courses all match
