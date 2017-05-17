@@ -13,7 +13,13 @@
     <link rel="stylesheet" href="bootstrap/dist/css/bootstrap.min.css">
     <link rel="stylesheet" href="bootstrap/dist/css/bootstrap-theme.min.css">
     <link rel="stylesheet" href="bootstrap-calendar/css/calendar.css">
-
+    <style type="text/css">
+        .error {
+            display: inline-block;
+            background: #FEE;
+            color: red;
+        }
+    </style>
     <script type="text/javascript">
         function validateForm() {
             // Reset the error view
@@ -45,37 +51,68 @@
 <body>
 <div class="container">
     <div class="jumbotron">
-        <h1>Classroom Schedule</h1>
-        <form name="form1" method="POST" class="" onsubmit="return validateForm()"">
-            <p>*Building: <input type="text" name="building" />   (e.g MC, DC, RCH, DWE, HH...)</p>
-            <p>*Room number: <input type="text" name="room" /></p>
-            <p>Day:
-            <select name="day">
-                <option value="today" selected></option>
-                <option value="M">Monday</option>
-                <option value="T">Tuesday</option>
-                <option value="W">Wednesday</option>
-                <option value="Th">Thursday</option>
-                <option value="F">Friday</option>
-            </select> (Default will show today's schedule.)</p>
-            <p class="error" id="buildingError"></p>
-            <p class="error" id="roomError"></p>
-            <input id="search" type="submit" value="Search" class="btn" />
+        <form name="form1" method="POST" class="form-horizontal" onsubmit="return validateForm()"">
+            <div class="form-group">
+                <div class="col-xs-9 col-xs-offset-3">
+                    <h2>Classroom Schedule</h2>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label class="col-xs-3 control-label">*Building:</label>
+                <div class="col-xs-6">
+                    <input type="text" class="form-control" name="building" placeholder="(e.g MC, DC, HH...)" />
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label class="col-xs-3 control-label">*Room number:</label>
+                <div class="col-xs-6">
+                    <input type="text" class="form-control" name="room" />
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label class="col-xs-3 control-label">Day:</label>
+                <div class="col-xs-6">
+                    <select name="day">
+                        <option value="today" selected>Today</option>
+                        <option value="M">Monday</option>
+                        <option value="T">Tuesday</option>
+                        <option value="W">Wednesday</option>
+                        <option value="Th">Thursday</option>
+                        <option value="F">Friday</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <div class="col-xs-9 col-xs-offset-3">
+                    <div class="error" id="buildingError"></div>
+                    <div class="error" id="roomError"></div>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <div class="col-xs-9 col-xs-offset-3">
+                    <input id="search" type="submit" value="Search" class="btn btn-primary btn-md" />
+                </div>
+            </div>
         </form>
     </div>
 
     <% if (typeof building != 'undefined' && typeof room != 'undefined' && typeof date != 'undefined' && typeof day != 'undefined') { %>
         <% if (day == "today") { %>
-            <h2>Classroom Schedule of <%= building %> <%= room %> on <%= date %></h2>
+            <h4 class="well">Classroom Schedule of <%= building %> <%= room %> on <%= date %></h4>
         <% } else { %>
-            <h2>Classroom Schedule of <%= building %> <%= room %> on
+            <h4 class="well">Classroom Schedule of <%= building %> <%= room %> on
                 <% if (day == "M") { %> Monday
                 <% } else if (day == "T") { %> Tuesday
                 <% } else if (day == "W") { %> Wednesday
                 <% } else if (day == "Th") { %> Thursday
                 <% } else { %> Friday
                 <% } %>
-            </h2>
+            </h4>
         <% } %>
     <% } %>
 
