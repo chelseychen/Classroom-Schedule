@@ -273,6 +273,12 @@
   position: absolute;
   width: 100%;
   margin-left: -60px;
+  border: 1px solid #EEEEEE;
+}
+#cal-day-box #cal-day-event {
+  position: relative;
+  margin-left: 33px;
+  margin-right: 1px;
 }
 #cal-day-box .day-event {
   position: absolute;
@@ -381,7 +387,7 @@
 .cal-row-head [class*="cal-cell"] {
   font-weight: bolder;
   text-align: center;
-  border: 0px solid;
+  border: 1px solid #EEEEEE;
   padding: 5px 0;
 }
 .cal-row-head [class*="cal-cell"] small {
