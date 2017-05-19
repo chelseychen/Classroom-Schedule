@@ -8,74 +8,75 @@
     <meta name="description" content="">
     <meta name="author" content="">
 
-    <title>Chelsey Chen</title>
+    <title>UWClassroom - Chelsey Chen</title>
 
     <link rel="stylesheet" href="bootstrap/dist/css/bootstrap.min.css">
     <link rel="stylesheet" href="bootstrap/dist/css/bootstrap-theme.min.css">
     <link rel="stylesheet" href="bootstrap-calendar/css/calendar.css">
-    <style type="text/css">
-        .error {
-            display: inline-block;
-            background: #FEE;
-            color: red;
-        }
-    </style>
-    <script type="text/javascript">
-        function validateForm() {
-            // Reset the error view
-            document.getElementById("buildingError").innerHTML = "";
-            document.getElementById("roomError").innerHTML = "";
-
-            var noError = true;
-            var digits = /^[0-9]+$/;
-            var building = document.forms["form1"]["building"].value;
-            var room  = document.forms["form1"]["room"].value;
-
-            if (building == '') {
-                document.getElementById("buildingError").innerHTML =
-                "Please enter an valid building name.";
-                noError = false;
-            }
-
-            if (room == '' || !room.match(digits)) {
-                document.getElementById("roomError").innerHTML =
-                "Please enter an valid room number.";
-                noError = false;
-            }
-
-            return noError;
-        }
-    </script>
+    <link rel="stylesheet" href="css/style.css">
+    <script type="text/javascript" src="jquery/dist/jquery.js"></script>
+    <script type="text/javascript" src="underscore/underscore-min.js"></script>
+    <script type="text/javascript" src="bootstrap-calendar/js/calendar.js"></script>
+    <script type="text/javascript" src="bootstrap-validator/dist/validator.js"></script>
 </head>
 
 <body>
 <div class="container">
     <div class="jumbotron">
-        <form name="form1" method="POST" class="form-horizontal" onsubmit="return validateForm()"">
+        <form name="form1" data-toggle="validator" method="POST" class="form-horizontal">
             <div class="form-group">
-                <div class="col-xs-9 col-xs-offset-3">
+                <div class="col-xs-8 col-xs-offset-4">
                     <h2>Classroom Schedule</h2>
                 </div>
             </div>
 
-            <div class="form-group">
-                <label class="col-xs-3 control-label">*Building:</label>
-                <div class="col-xs-6">
-                    <input type="text" class="form-control" name="building" placeholder="(e.g MC, DC, HH...)" />
+            <div class="form-group has-feedback">
+                <label for="buildingInput" class="col-xs-4 control-label">*Building:</label>
+                <div class="col-xs-4">
+                    <select id="buildingInput" name="building" class="form-control" data-error="Please enter a valid building name." required>
+                        <option value="" selected></option>
+                        <option value="AL">AL - Arts Lecture Hall</option>
+                        <option value="B1">B1 - Biology 1</option>
+                        <option value="B2">B2 - Biology 2</option>
+                        <option value="C2">C2 - Chemistry 2</option>
+                        <option value="DC">DC - Davis Center</option>
+                        <option value="DWE">DWE - Douglas Wright Engineering</option>
+                        <option value="E2">E2 - Engineering 2</option>
+                        <option value="E3">E3 - Engineering 3</option>
+                        <option value="E5">E5 - Engineering 5</option>
+                        <option value="E6">E6 - Engineering 6</option>
+                        <option value="ESC">ESC - Earth Science &amp; Chemistry</option>
+                        <option value="EV1">EV1 - Environment 1</option>
+                        <option value="EV2">EV2 - Environment 2</option>
+                        <option value="EV3">EV3 - Environment 3</option>
+                        <option value="HH">HH - J.G. Hagey Hall of the Humanities</option>
+                        <option value="M3">M3 - Mathematics 3</option>
+                        <option value="MC">MC - Mathematics &amp; Computer</option>
+                        <option value="ML">ML - Modern Language</option>
+                        <option value="OPT">OPT - Optometry</option>
+                        <option value="PAS">PAS - Psychology, Anthropology &amp; Sociology</option>
+                        <option value="PHY">PHY - Physical Activities Complex</option>
+                        <option value="QNC">QNC - Quantum Nano Center</option>
+                        <option value="RCH">RCH - J.R. Coutts Engineering Lecture Hall</option>
+                        <option value="STC">STC - Science Teaching Complex</option>
+                    </select>
+                    <div class="help-block with-errors"></div>
                 </div>
             </div>
 
-            <div class="form-group">
-                <label class="col-xs-3 control-label">*Room number:</label>
-                <div class="col-xs-6">
-                    <input type="text" class="form-control" name="room" />
+            <div class="form-group has-feedback">
+                <label for="roomInput" class="col-xs-4 control-label">*Room:</label>
+                <div class="col-xs-4">
+                    <input id="roomInput" pattern="^[0-9]+$" name="room" type="text" class="form-control" data-error="Please enter a valid room number." required />
+                    <div class="help-block with-errors"></div>
                 </div>
+
             </div>
 
             <div class="form-group">
-                <label class="col-xs-3 control-label">Day:</label>
-                <div class="col-xs-6">
-                    <select name="day">
+                <label class="col-xs-4 control-label">Day:</label>
+                <div class="col-xs-4">
+                    <select name="day" class="form-control">
                         <option value="today" selected>Today</option>
                         <option value="M">Monday</option>
                         <option value="T">Tuesday</option>
@@ -87,14 +88,7 @@
             </div>
 
             <div class="form-group">
-                <div class="col-xs-9 col-xs-offset-3">
-                    <div class="error" id="buildingError"></div>
-                    <div class="error" id="roomError"></div>
-                </div>
-            </div>
-
-            <div class="form-group">
-                <div class="col-xs-9 col-xs-offset-3">
+                <div class="col-xs-4 col-xs-offset-4">
                     <input id="search" type="submit" value="Search" class="btn btn-primary btn-md" />
                 </div>
             </div>
@@ -127,9 +121,6 @@
     -->
 
     <div id="calendar"></div>
-    <script type="text/javascript" src="jquery/dist/jquery.js"></script>
-    <script type="text/javascript" src="underscore/underscore-min.js"></script>
-    <script type="text/javascript" src="bootstrap-calendar/js/calendar.js"></script>
 
     <% if (typeof courses != 'undefined') { %>
         <script type="text/javascript">
