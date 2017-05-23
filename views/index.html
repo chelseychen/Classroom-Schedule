@@ -6,7 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
     <meta name="description" content="">
-    <meta name="author" content="">
+    <meta name="author" content="Chelsey Chen">
 
     <title>UWClassroom - Chelsey Chen</title>
 
@@ -16,8 +16,18 @@
     <link rel="stylesheet" href="css/style.css">
     <script type="text/javascript" src="jquery/dist/jquery.js"></script>
     <script type="text/javascript" src="underscore/underscore-min.js"></script>
+    <script type="text/javascript" src="bootstrap/js/tab.js"></script>
     <script type="text/javascript" src="bootstrap-calendar/js/calendar.js"></script>
     <script type="text/javascript" src="bootstrap-validator/dist/validator.js"></script>
+    <script type="text/javascript">
+        jQuery(function ($) {
+            var $inputs = $('input[name=room],input[name=floor]');
+            $inputs.on('input', function () {
+                // Set the required property of the other input to false if this input is not empty.
+                $inputs.not(this).prop('required', !$(this).val().length);
+            });
+        });
+    </script>
 </head>
 
 <body>
@@ -31,7 +41,7 @@
             </div>
 
             <div class="form-group has-feedback">
-                <label for="buildingInput" class="col-xs-4 control-label">*Building:</label>
+                <label for="buildingInput" class="col-xs-4 control-label">Building:</label>
                 <div class="col-xs-4">
                     <select id="buildingInput" name="building" class="form-control" data-error="Please enter a valid building name." required>
                         <option value="" selected></option>
@@ -65,12 +75,18 @@
             </div>
 
             <div class="form-group has-feedback">
-                <label for="roomInput" class="col-xs-4 control-label">*Room:</label>
+                <label for="roomInput" class="col-xs-4 control-label">Room:</label>
                 <div class="col-xs-4">
-                    <input id="roomInput" pattern="^[0-9]+$" name="room" type="text" class="form-control" data-error="Please enter a valid room number." required />
+                    <input id="roomInput" pattern="^[0-9]+$" name="room" type="text" class="form-control" required />
+                </div>
+            </div>
+
+            <div class="form-group has-feedback">
+                <label for="floorInput" class="col-xs-4 control-label">Floor:</label>
+                <div class="col-xs-4">
+                    <input id="floorInput" pattern="^[1-9]$" name="floor" type="text" class="form-control" data-error="Please enter a valid room or floor number." placeholder="e.g. 1, 2, 3, ..." required />
                     <div class="help-block with-errors"></div>
                 </div>
-
             </div>
 
             <div class="form-group">
@@ -95,7 +111,7 @@
         </form>
     </div>
 
-    <% if (typeof building != 'undefined' && typeof room != 'undefined' && typeof date != 'undefined' && typeof day != 'undefined') { %>
+    <% if (typeof room != 'undefined') { %>
         <% if (day == "today") { %>
             <h4 class="well">Classroom Schedule of <%= building %> <%= room %> on <%= date %></h4>
         <% } else { %>
@@ -108,21 +124,8 @@
                 <% } %>
             </h4>
         <% } %>
-    <% } %>
 
-    <!-- Debug: check if courses all match
-    <% if (typeof courses!='undefined') { %>
-        <ul>
-            <% courses.forEach(function(course) { %>
-                <li><%= course.title %>: start [<%= course.start %>] end [<%= course.end %>]</li>
-            <% }); %>
-        </ul>
-    <% } %>
-    -->
-
-    <div id="calendar"></div>
-
-    <% if (typeof courses != 'undefined') { %>
+        <div id="calendar"></div>
         <script type="text/javascript">
             var calendar = $("#calendar").calendar({
                 view: 'day',
@@ -133,6 +136,52 @@
                 events_source: JSON.parse('<%- JSON.stringify(courses) %>')
             });
         </script>
+    <% } %>
+
+    <% if (typeof floor != 'undefined' && typeof noFloorInfo == 'undefined') { %>
+        <% if (day == "today") { %>
+            <h4 class="well">Classroom Schedule of <%= building %> on the <%= floor %> floor on <%= date %></h4>
+        <% } else { %>
+            <h4 class="well">Classroom Schedule of <%= building %> on the <%= floor %> floor on
+                <% if (day == "M") { %> Monday
+                <% } else if (day == "T") { %> Tuesday
+                <% } else if (day == "W") { %> Wednesday
+                <% } else if (day == "Th") { %> Thursday
+                <% } else { %> Friday
+                <% } %>
+            </h4>
+        <% } %>
+
+        <ul class="nav nav-tabs">
+            <% roomsData.forEach(function(roomData) { %>
+                <li><a data-toggle="pill" href="#<%= roomData.room %>"><%= building %> <%= roomData.room %></a></li>
+            <% }); %>
+        </ul>
+
+        <div class="tab-content">
+            <% roomsData.forEach(function(roomData) { %>
+                <div id="<%= roomData.room %>" class="tab-pane fade">
+                    <div id="calendar<%= roomData.room %>"></div>
+                </div>
+                <script type="text/javascript">
+                    var calendar = $("#calendar<%= roomData.room %>").calendar({
+                        view: 'day',
+                        time_start: '08:00',
+                        time_end: '22:00',
+                        tmpl_cache: false,
+                        tmpl_path: "bootstrap-calendar/tmpls/",
+                        events_source: JSON.parse('<%- JSON.stringify(roomData.courses) %>')
+                    });
+                </script>
+            <% }); %>
+        </div>
+    <% } %>
+
+    <% if (typeof noFloorInfo != 'undefined') { %>
+        <div class="well">
+            <h5>Sorry, I haven't gathered <%= floor %> floor infomation in <%= building %>.</h5>
+            <h5>Please try to search for a particular room you know on <%= floor %> floor in <%= building %>.</h5>
+        </div>
     <% } %>
 </div>
 </body>

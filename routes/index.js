@@ -1,5 +1,6 @@
-var express = require('express'),
-uwapi   = require('uwaterloo-api');
+var express    = require('express'),
+    uwapi      = require('uwaterloo-api'),
+    sourceFile = require('./sourceFile');
 
 var router  = express.Router();
 
@@ -13,17 +14,16 @@ router.get('/', function(req, res, next) {
 
 router.post('/', function(req, res, next) {
     var b = req.body.building,
-        r = req.body.room;
+        r = req.body.room || 'undefined',
+        f = req.body.floor || 'undefined',
         d = req.body.day;
 
-    uwclient.get('/buildings/{building}/{room}/courses', {
-            building: b, room: r
-        }, function(err, response) {
-            var courses_raw = response.data;
-            var courses = processData(courses_raw, d);
-            var building = b.toUpperCase();
-            var today = new Date();
-            var date = today.toDateString();
+    var today = new Date();
+    var date = today.toDateString();
+    var building = b.toUpperCase();
+
+    if (r != 'undefined') {
+        var courses = getCourses(b, r, d, function(courses) {
             res.render('index', {
                 day: d,
                 date: date,
@@ -32,7 +32,43 @@ router.post('/', function(req, res, next) {
                 courses: courses
             });
         });
+    } else if (f != 'undefined') {
+        var rooms = sourceFile.floorInfo[building][f] || 'undefined';
+        if (rooms != 'undefined') {
+            var roomsData = [];
+            rooms.forEach(function(roomNum) {
+                var courses = getCourses(b, roomNum, d, function(courses) {
+                    roomsData.push({room: roomNum, courses: courses});
+                    if (roomsData.length == rooms.length) {
+                        res.render('index', {
+                            day: d,
+                            date: date,
+                            building: building,
+                            floor: sourceFile.floorString[f],
+                            roomsData: roomsData
+                        });
+                    }
+                });
+            });
+        } else {
+            res.render('index', {
+                building: building,
+                floor: sourceFile.floorString[f],
+                noFloorInfo: true
+            });
+        }
+    }
 });
+
+getCourses = function(b, roomNum, d, callback) {
+    uwclient.get('/buildings/{building}/{room}/courses', {
+            building: b, room: roomNum
+        }, function(err, response) {
+            var courses_raw = response.data;
+            var courses = processData(courses_raw, d);
+            callback(courses);
+        });
+}
 
 // Process all the courses and make them use the format of event_source
 processData = function(courses_raw, day) {
