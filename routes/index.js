@@ -17,6 +17,14 @@ router.post('/', function(req, res, next) {
         r = req.body.room || 'undefined',
         f = req.body.floor || 'undefined',
         d = req.body.day;
+    var form = {
+        buildings: sourceFile.buildings,
+        days: sourceFile.days,
+        building: b,
+        room: r,
+        floor: f,
+        day: d
+    };
 
     var today = new Date();
     var date = today.toDateString();
@@ -29,7 +37,8 @@ router.post('/', function(req, res, next) {
                 date: date,
                 building: building,
                 room: r,
-                courses: courses
+                courses: courses,
+                formData: form
             });
         });
     } else if (f != 'undefined') {
@@ -45,7 +54,8 @@ router.post('/', function(req, res, next) {
                             date: date,
                             building: building,
                             floor: sourceFile.floorString[f],
-                            roomsData: roomsData
+                            roomsData: roomsData,
+                            formData: form
                         });
                     }
                 });
@@ -54,7 +64,8 @@ router.post('/', function(req, res, next) {
             res.render('index', {
                 building: building,
                 floor: sourceFile.floorString[f],
-                noFloorInfo: true
+                noFloorInfo: true,
+                formData: form
             });
         }
     }

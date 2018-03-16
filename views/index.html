@@ -44,31 +44,41 @@
                 <label for="buildingInput" class="col-xs-4 control-label">Building:</label>
                 <div class="col-xs-4">
                     <select id="buildingInput" name="building" class="form-control" data-error="Please enter a valid building name." required>
-                        <option value="" selected></option>
-                        <option value="AL">AL - Arts Lecture Hall</option>
-                        <option value="B1">B1 - Biology 1</option>
-                        <option value="B2">B2 - Biology 2</option>
-                        <option value="C2">C2 - Chemistry 2</option>
-                        <option value="DC">DC - Davis Center</option>
-                        <option value="DWE">DWE - Douglas Wright Engineering</option>
-                        <option value="E2">E2 - Engineering 2</option>
-                        <option value="E3">E3 - Engineering 3</option>
-                        <option value="E5">E5 - Engineering 5</option>
-                        <option value="E6">E6 - Engineering 6</option>
-                        <option value="ESC">ESC - Earth Science &amp; Chemistry</option>
-                        <option value="EV1">EV1 - Environment 1</option>
-                        <option value="EV2">EV2 - Environment 2</option>
-                        <option value="EV3">EV3 - Environment 3</option>
-                        <option value="HH">HH - J.G. Hagey Hall of the Humanities</option>
-                        <option value="M3">M3 - Mathematics 3</option>
-                        <option value="MC">MC - Mathematics &amp; Computer</option>
-                        <option value="ML">ML - Modern Language</option>
-                        <option value="OPT">OPT - Optometry</option>
-                        <option value="PAS">PAS - Psychology, Anthropology &amp; Sociology</option>
-                        <option value="PHY">PHY - Physical Activities Complex</option>
-                        <option value="QNC">QNC - Quantum Nano Center</option>
-                        <option value="RCH">RCH - J.R. Coutts Engineering Lecture Hall</option>
-                        <option value="STC">STC - Science Teaching Complex</option>
+                        <option value=""></option>
+                        <% if (typeof formData != 'undefined') { %>
+                            <% Object.keys(formData.buildings).forEach(function(key) { %>
+                                <option value="<%= key %>"
+                                    <% if (key == formData.building) { %>
+                                        <%= "selected" %>
+                                    <% } %>
+                                    ><%= formData.buildings[key] %></option>
+                            <% }); %>
+                        <% } else { %>
+                            <option value="AL">AL - Arts Lecture Hall</option>
+                            <option value="B1">B1 - Biology 1</option>
+                            <option value="B2">B2 - Biology 2</option>
+                            <option value="C2">C2 - Chemistry 2</option>
+                            <option value="DC">DC - Davis Center</option>
+                            <option value="DWE">DWE - Douglas Wright Engineering</option>
+                            <option value="E2">E2 - Engineering 2</option>
+                            <option value="E3">E3 - Engineering 3</option>
+                            <option value="E5">E5 - Engineering 5</option>
+                            <option value="E6">E6 - Engineering 6</option>
+                            <option value="ESC">ESC - Earth Science &amp; Chemistry</option>
+                            <option value="EV1">EV1 - Environment 1</option>
+                            <option value="EV2">EV2 - Environment 2</option>
+                            <option value="EV3">EV3 - Environment 3</option>
+                            <option value="HH">HH - J.G. Hagey Hall of the Humanities</option>
+                            <option value="M3">M3 - Mathematics 3</option>
+                            <option value="MC">MC - Mathematics &amp; Computer</option>
+                            <option value="ML">ML - Modern Language</option>
+                            <option value="OPT">OPT - Optometry</option>
+                            <option value="PAS">PAS - Psychology, Anthropology &amp; Sociology</option>
+                            <option value="PHY">PHY - Physical Activities Complex</option>
+                            <option value="QNC">QNC - Quantum Nano Center</option>
+                            <option value="RCH">RCH - J.R. Coutts Engineering Lecture Hall</option>
+                            <option value="STC">STC - Science Teaching Complex</option>
+                        <% } %>
                     </select>
                     <div class="help-block with-errors"></div>
                 </div>
@@ -93,12 +103,22 @@
                 <label class="col-xs-4 control-label">Day:</label>
                 <div class="col-xs-4">
                     <select name="day" class="form-control">
-                        <option value="today" selected>Today</option>
-                        <option value="M">Monday</option>
-                        <option value="T">Tuesday</option>
-                        <option value="W">Wednesday</option>
-                        <option value="Th">Thursday</option>
-                        <option value="F">Friday</option>
+                        <% if (typeof formData != 'undefined') { %>
+                            <% Object.keys(formData.days).forEach(function(key) { %>
+                                <option value="<%= key %>"
+                                    <% if (key == formData.day) { %>
+                                        <%= "selected" %>
+                                    <% } %>
+                                    ><%= formData.days[key] %></option>
+                            <% }); %>
+                        <% } else { %>
+                            <option value="today">Today</option>
+                            <option value="M">Monday</option>
+                            <option value="T">Tuesday</option>
+                            <option value="W">Wednesday</option>
+                            <option value="Th">Thursday</option>
+                            <option value="F">Friday</option>
+                        <% } %>
                     </select>
                 </div>
             </div>
